@@ -1,0 +1,56 @@
+<!-- src/app/components/dashboard/dashboard.component.html -->
+
+<div class="container mx-auto p-4">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold">Welcome, {{ currentUsername() }}</h1>
+    <button nz-button nzType="default" class="bg-red-500 text-white" (click)="logout()">Logout</button>
+  </div>
+
+  <form [formGroup]="todoForm" (ngSubmit)="addTodo()" class="mb-4">
+    <div class="flex gap-4 items-center">
+      <input nz-input formControlName="name" placeholder="Enter todo" class="flex-grow p-2 border border-gray-300 rounded" />
+      <button nz-button nzType="primary" class="bg-blue-500 text-white px-4 rounded" type="submit">Add Todo</button>
+    </div>
+  </form>
+
+  <div class="flex justify-between items-center mb-4 gap-3">
+    <div class="flex gap-2">
+      <button nz-button 
+              [nzType]="currentFilter() === 'all' ? 'primary' : 'default'" 
+              (click)="filterTodos('all')">
+        All
+      </button>
+      <button nz-button 
+              [nzType]="currentFilter() === 'active' ? 'primary' : 'default'" 
+              (click)="filterTodos('active')">
+        Active
+      </button>
+      <button nz-button 
+              [nzType]="currentFilter() === 'completed' ? 'primary' : 'default'" 
+              (click)="filterTodos('completed')">
+        Completed
+      </button>
+    </div>
+    <input nz-input (input)="search($event)" placeholder="Search todos..." class="p-2 border border-gray-300 rounded" />
+  </div>
+
+  <nz-list class="bg-white shadow rounded">
+    <nz-list-item *ngFor="let todo of filteredTodos(); trackBy: trackByTodoId" class="p-4 flex items-center justify-between border-b last:border-b-0">
+      <div class="flex items-center">
+        <label nz-checkbox [(ngModel)]="todo.completed" (ngModelChange)="toggleTodoCompletion(todo.id)" class="mr-2"></label>
+        <span [class.line-through]="todo.completed">{{ todo.name }}</span>
+      </div>
+      <button nz-button nzType="default" class="bg-red-500 text-white" (click)="deleteTodo(todo.id)">Delete</button>
+    </nz-list-item>
+  </nz-list>
+
+  <div class="mt-4 flex justify-center">
+    <nz-pagination
+      [(nzPageIndex)]="pageIndex"
+      [nzTotal]="totalTodos()"
+      [nzPageSize]="pageSize"
+      (nzPageIndexChange)="onPageChange($event)"
+      class="bg-white shadow p-2 rounded"
+    ></nz-pagination>
+  </div>
+</div>
