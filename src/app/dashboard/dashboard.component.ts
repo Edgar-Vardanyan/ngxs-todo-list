@@ -82,7 +82,6 @@ export class DashboardComponent implements OnInit {
   }
 
   toggleTodoCompletion(todoId: number) {
-    console.log(todoId)
     this._todoService.toggleTodoCompletion(this.currentUsername(), todoId).subscribe(() => {
       this._todoService.getUserTodos(this.currentUsername()).subscribe(todos => {
         this.todos.set(todos);
@@ -121,7 +120,13 @@ export class DashboardComponent implements OnInit {
   }
 
   totalTodos() {
-    return this.todos().length;
+    let filtered = this.todos();
+    if (this.currentFilter() === 'active') {
+      filtered = this.todos().filter(todo => !todo.completed);
+    } else if (this.currentFilter() === 'completed') {
+      filtered = this.todos().filter(todo => todo.completed);
+    }
+    return filtered.length;
   }
 
   trackByTodoId(index: number, todo: Todo): number {

@@ -84,7 +84,6 @@ export class TodoState {
     const state = getState();
     const users = [...state.users];
     const userIndex = users.findIndex(user => user.username === username);
-     console.log(users[userIndex])
     if (userIndex !== -1) {
       users[userIndex] = {
         ...users[userIndex],
